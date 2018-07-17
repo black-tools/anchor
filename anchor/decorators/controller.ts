@@ -19,26 +19,36 @@ export function Controller(config: ControllerConfig) {
 
             setupRoutes() {
                 const router = this.__router__;
-                console.log(this.__routes__);
+                // console.log(this.__routes__);
                 for (const route of this.__routes__) {
                     let path = urljoin(this.__config__.path, route.config.path);
 
-                    console.log(path);
+                    // console.log(path);
 
 
                     if (route.raw) {
                         router[route.config.method](path, (req, res) => {
-                            this[route.propKey](req, res);
+                            try {
+                                this[route.propKey](req, res);
+                            } catch (err) {
+                                res.end();
+                            }
                         })
+
+
                     } else {
                         router[route.config.method](path, async (req, res) => {
-                            let params = {...req.query, ...req.params};
+                            try {
+                                let params = {...req.query, ...req.params};
 
-                            const result = this[route.propKey](params, req.body);
-                            if (result.then) {
-                                res.json(await result);
-                            } else {
-                                res.json(result);
+                                const result = this[route.propKey](params, req.body);
+                                if (result.then) {
+                                    res.json(await result);
+                                } else {
+                                    res.json(result);
+                                }
+                            } catch (err) {
+                                res.end();
                             }
                         })
                     }

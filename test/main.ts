@@ -15,6 +15,15 @@ export class AppController {
         return params;
     }
 
+
+    @Route({
+        path: '/route',
+        method: 'post'
+    })
+    postRoute(params, body) {
+        return body;
+    }
+
     @RawRoute({
         path: '/*',
         method: 'all'
@@ -23,8 +32,6 @@ export class AppController {
         res.end('Test server ');
     }
 }
-
-console.log('---> 1');
 
 
 @NcModule({
@@ -41,7 +48,4 @@ export class AppModule {
 
 }
 
-console.log('---> 2');
-
-
-App.bootstrap({}, AppModule);
+App.bootstrap({port: 3000}, AppModule);
