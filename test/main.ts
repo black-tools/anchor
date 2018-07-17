@@ -1,10 +1,19 @@
-import {NcModule, App, Controller, RawRoute} from "../anchor";
-import {ApiModule} from "./api/api.module";
+import {NcModule, App, Controller, RawRoute, Route} from "../anchor";
+import {urlencoded, json} from 'body-parser';
+import * as cors from 'cors';
 
 @Controller({
-    path: ''
+    path: '/'
 })
 export class AppController {
+
+    @Route({
+        path: '/route',
+        method: 'get'
+    })
+    randomRoute(params) {
+        return params;
+    }
 
     @RawRoute({
         path: '/*',
@@ -15,10 +24,14 @@ export class AppController {
     }
 }
 
+console.log('---> 1');
+
 
 @NcModule({
-    imports: [
-        ApiModule
+    middlewares: [
+        urlencoded({extended: false}),
+        json(),
+        cors()
     ],
     declarations: [
         AppController,
@@ -27,6 +40,8 @@ export class AppController {
 export class AppModule {
 
 }
+
+console.log('---> 2');
 
 
 App.bootstrap({}, AppModule);

@@ -1,36 +1,80 @@
 import * as express from "express";
+import * as urljoin from 'url-join';
 
 export interface ControllerConfig {
     path: string;
 }
 
 export function Controller(config: ControllerConfig) {
-    return function (target: Function // The class the decorator is declared on
-    ) {
+    return function <T extends { new(...args: any[]): any }>(constructor: T) {
+        return class extends constructor {
 
-        // save a reference to the original constructor
-        const original = target;
-        // the new constructor behaviour
-        const f: any = function (...args) {
-            this.__router__ = express.Router();
-            this.__routes__ = (target.prototype as any).__routes__;
-            this.__config__ = config;
-            // console.log('ClassWrapper: before class constructor', original.name);
-            let instance = original.apply(this, args);
-            // console.log('ClassWrapper: after class constructor', original.name);
-            return instance;
-        };
-
-        // copy prototype so intanceof operator still works
-        f.prototype = original.prototype;
-
-        // return new constructor (will override original)
-        return f;
-
-        // console.log('target> ', target);
+            constructor(...args: any[]) {
+                super(...args);
+                this.__router__ = express.Router();
+                this.__config__ = config;
+                this.setupRoutes();
+            }
 
 
+            setupRoutes() {
+                const router = this.__router__;
+                console.log(this.__routes__);
+                for (const route of this.__routes__) {
+                    let path = urljoin(this.__config__.path, route.config.path);
+
+                    console.log(path);
+
+
+                    if (route.raw) {
+                        router[route.config.method](path, (req, res) => {
+                            this[route.propKey](req, res);
+                        })
+                    } else {
+                        router[route.config.method](path, async (req, res) => {
+                            let params = {...req.query, ...req.params};
+
+                            const result = this[route.propKey](params, req.body);
+                            if (result.then) {
+                                res.json(await result);
+                            } else {
+                                res.json(result);
+                            }
+                        })
+                    }
+                }
+            }
+
+        }
     }
+
+
+    // return function (target: Function // The class the decorator is declared on
+    // ) {
+    //
+    //     // save a reference to the original constructor
+    //     const original = target;
+    //     // the new constructor behaviour
+    //     const f: any = function (...args) {
+    //         this.__router__ = express.Router();
+    //         this.__routes__ = (target.prototype as any).__routes__;
+    //         this.__config__ = config;
+    //         // console.log('ClassWrapper: before class constructor', original.name);
+    //         let instance = original.apply(this, args);
+    //         // console.log('ClassWrapper: after class constructor', original.name);
+    //         return instance;
+    //     };
+    //
+    //     // copy prototype so intanceof operator still works
+    //     f.prototype = original.prototype;
+    //
+    //     // return new constructor (will override original)
+    //     return f;
+    //
+    //     // console.log('target> ', target);
+    //
+    //
+    // }
 
     // return function <T extends { new(...args: any[]): {} }>(constructor: any) {
     //     return class extends constructor {

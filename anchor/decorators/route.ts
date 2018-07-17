@@ -3,11 +3,11 @@ export interface RouteConfig {
     method: string;
 }
 
-export interface Req {
-    params: any;
-    query: any;
-    body: any;
-}
+// export interface Req {
+//     params: any;
+//     query: any;
+//     body: any;
+// }
 
 export function Route(config: RouteConfig) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
