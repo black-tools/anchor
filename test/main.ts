@@ -1,6 +1,7 @@
 import {NcModule, App, Controller, RawRoute, Route} from "../anchor";
 import {urlencoded, json} from 'body-parser';
 import * as cors from 'cors';
+import {ApiModule} from "./api/api.module";
 
 @Controller({
     path: '/'
@@ -35,6 +36,9 @@ export class AppController {
 
 
 @NcModule({
+    imports: [
+        ApiModule
+    ],
     middlewares: [
         urlencoded({extended: false}),
         json(),

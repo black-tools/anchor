@@ -17,7 +17,15 @@ export function NcModule(config: NcModuleConfig) {
                 super(...args);
                 this.__router__ = express.Router();
                 this.setupMiddlewares();
+                this.setupImportedRouters();
                 this.setupRoutes();
+            }
+
+            setupImportedRouters() {
+                this.__imports__ = (this.__config__.imports || []).map(m => new m);
+                for (let module of this.__imports__) {
+                    this.__router__.use(module.__router__);
+                }
             }
 
             setupRoutes() {
@@ -29,7 +37,8 @@ export function NcModule(config: NcModuleConfig) {
             }
 
             setupMiddlewares() {
-                for (const mw of this.__config__.middlewares) {
+                const middlewares = this.__config__.middlewares || [];
+                for (const mw of middlewares) {
                     this.__router__.use(mw)
                 }
             }

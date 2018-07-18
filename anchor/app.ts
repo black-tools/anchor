@@ -13,11 +13,6 @@ export class App {
 
         let m = new module();
         app.use(m.__router__);
-        // m.__routers__ = m.__config__.declarations.map(r => new r);
-
-        // for (const ctrl of m.__routers__) {
-        // }
-        //     app.use(ctrl.__router__);
 
 
         const port = options.port || 3000;
