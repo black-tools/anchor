@@ -31,7 +31,8 @@ export function Controller(config: ControllerConfig) {
                             try {
                                 this[route.propKey](req, res);
                             } catch (err) {
-                                res.end();
+                                console.error(err);
+                                res.status(500).send({error: err});
                             }
                         })
 
@@ -48,7 +49,8 @@ export function Controller(config: ControllerConfig) {
                                     res.json(result);
                                 }
                             } catch (err) {
-                                res.end();
+                                console.error(err);
+                                res.status(500).send({error: err});
                             }
                         })
                     }
