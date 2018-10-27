@@ -32,7 +32,7 @@ export function Controller(config: ControllerConfig) {
                                 this[route.propKey](req, res);
                             } catch (err) {
                                 console.error(err);
-                                res.status(500).send({error: err});
+                                res.status(500).send(err);
                             }
                         })
 
@@ -50,7 +50,7 @@ export function Controller(config: ControllerConfig) {
                                 }
                             } catch (err) {
                                 console.error(err);
-                                res.status(500).send({error: err});
+                                res.status(500).send(err);
                             }
                         })
                     }
