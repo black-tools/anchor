@@ -11,7 +11,7 @@ export class App {
 
         const app = express();
 
-        let m = new module();
+        let m = new module(app);
         app.use(m.__router__);
 
 
