@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "serve": "nodemon --watch '**/*.ts' --ignore '**/*.spec.ts' --exec 'ts-node' test/main.ts"
+    "serve": "nodemon --watch '**/*.ts' --ignore '**/*.spec.ts' --exec 'ts-node' test/main.ts",
+    "upload": "npm run build && npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
