@@ -27,9 +27,9 @@ export function Controller(config: ControllerConfig) {
 
 
                     if (route.raw) {
-                        router[route.config.method](path, (req, res) => {
+                        router[route.config.method](path, (req, res, next) => {
                             try {
-                                this[route.propKey](req, res);
+                                this[route.propKey](req, res, next);
                             } catch (err) {
                                 console.error(err);
                                 res.status(500).send(err);
