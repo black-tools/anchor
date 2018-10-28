@@ -1,6 +1,6 @@
 {
   "name": "@black-tools/anchor",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A small framework for builiding web servers",
   "main": "dist/index.js",
   "directories": {
