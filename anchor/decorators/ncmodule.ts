@@ -12,9 +12,11 @@ export function NcModule(config: NcModuleConfig) {
     return function <T extends { new(...args: any[]): any }>(constructor: T) {
         return class extends constructor {
             __config__ = config;
+            args;
 
             constructor(...args: any[]) {
                 super(...args);
+                this.args = args;
                 this.__router__ = express.Router();
                 this.setupMiddlewares();
                 this.setupImportedRouters();
@@ -22,14 +24,14 @@ export function NcModule(config: NcModuleConfig) {
             }
 
             setupImportedRouters() {
-                this.__imports__ = (this.__config__.imports || []).map(m => new m);
+                this.__imports__ = (this.__config__.imports || []).map(m => new m(...this.args));
                 for (let module of this.__imports__) {
                     this.__router__.use(module.__router__);
                 }
             }
 
             setupRoutes() {
-                this.__routers__ = this.__config__.declarations.map(r => new r);
+                this.__routers__ = this.__config__.declarations.map(r => new r(...this.args));
 
                 for (const ctrl of this.__routers__) {
                     this.__router__.use(ctrl.__router__);
