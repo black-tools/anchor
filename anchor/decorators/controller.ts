@@ -19,8 +19,7 @@ export function Controller(config: ControllerConfig) {
 
             setupRoutes() {
                 const router = this.__router__;
-                // console.log(this.__routes__);
-                for (const route of this.__routes__) {
+                for (const route of (this.__routes__ || [])) {
                     let path = urljoin(this.__config__.path, route.config.path);
 
                     // console.log(path);
