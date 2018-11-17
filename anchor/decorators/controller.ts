@@ -33,7 +33,8 @@ export function Controller(config: ControllerConfig) {
                                 }
                                 break;
                             case 'static':
-                                express.static(route.config.directory)(req, res, (req, res) => {
+                                console.log(route);
+                                express.static(route.config.root)(req, res, (req, res) => {
                                     if (route.config.otherwise) {
                                         res.sendFile(route.config.otherwise);
                                     } else {

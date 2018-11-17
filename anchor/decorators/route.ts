@@ -5,7 +5,7 @@ export interface RouteConfig {
 
 export interface StaticRouteConfig {
     path: string;
-    directory: string;
+    root: string;
     otherwise?: string;
 }
 
