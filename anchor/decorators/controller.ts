@@ -35,11 +35,11 @@ export function Controller(config: ControllerConfig) {
                             case 'static':
                                 express.static(route.config.root)(req, res, () => {
                                     if (route.config.otherwise) {
-                                        try {
-                                            res.sendFile(route.config.otherwise);
-                                        } catch (err) {
-                                            res.status(404).end();
-                                        }
+                                        res.sendFile(route.config.otherwise, {}, (err) => {
+                                            if (err) {
+                                                res.status(err.status).end();
+                                            }
+                                        });
                                     } else {
                                         res.status(404).end();
                                     }
