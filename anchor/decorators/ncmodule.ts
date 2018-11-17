@@ -31,10 +31,19 @@ export function NcModule(config: NcModuleConfig) {
             }
 
             setupRoutes() {
-                this.__routers__ = this.__config__.declarations.map(r => new r(...this.args));
+                this.__controllers__ = this.__config__.declarations.map(c => new c(...this.args));
+                const regular = this.__controllers__.filter(c => !c.__config__.bindAfter);
+                for (const ctrl of regular) {
+                    ctrl.setupRoutes(this.__router__)
+                }
 
-                for (const ctrl of this.__routers__) {
-                    this.__router__.use(ctrl.__router__);
+                const lowPriority = this.__controllers__.filter(c => c.__config__.bindAfter);
+                if (lowPriority.length > 0) {
+                    this.__after_router__ = express.Router();
+                    for (const ctrl of lowPriority) {
+                        ctrl.setupRoutes(this.__router__)
+                    }
+                    this.__router__.use(this.__after_router__);
                 }
             }
 
