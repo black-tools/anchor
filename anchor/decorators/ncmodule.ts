@@ -62,7 +62,7 @@ export function NcModule(config: NcModuleConfig) {
                     module.setupEvents(socket);
                 }
 
-                console.log('[setup]', controllers);
+                // console.log('[setup]', controllers);
                 for (const ctrl of controllers) {
                     ctrl.setupEvents(socket);
                 }

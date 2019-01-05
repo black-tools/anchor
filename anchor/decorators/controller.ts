@@ -27,7 +27,7 @@ export function Controller(config: ControllerConfig) {
                                 try {
                                     this[route.propKey](req, res, next);
                                 } catch (err) {
-                                    console.error(err);
+                                    console.error('[route error]', err);
                                     res.status(500).send(err);
                                 }
                                 break;
@@ -66,11 +66,10 @@ export function Controller(config: ControllerConfig) {
 
 
             setupEvents(socket) {
-                console.log('[setup events]', this.__events__);
-
+                // console.log('[setup events]', this.__events__);
                 for (const event of (this.__events__ || [])) {
                     const completeEventName = event.method + ' ' + this.__config__.name;
-                    console.log('[event name]', event.method, completeEventName);
+                    // console.log('[event name]', event.method, completeEventName);
 
                     socket.on(completeEventName, async ([rid, params, data]) => {
                         try {
@@ -81,7 +80,7 @@ export function Controller(config: ControllerConfig) {
                                 socket.emit('R', [rid, 200, result]);
                             }
                         } catch (err) {
-                            console.error(err);
+                            console.error('[event error]', err);
                             socket.emit('R', [rid, 500, err])
                         }
                     });
