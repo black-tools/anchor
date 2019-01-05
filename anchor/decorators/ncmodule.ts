@@ -57,12 +57,12 @@ export function NcModule(config: NcModuleConfig) {
 
             setupEvents(socket){
                 const controllers = this.__controllers__;
-                console.log('[setup]', controllers);
 
                 for (let module of this.__imports__) {
                     module.setupEvents(socket);
                 }
 
+                console.log('[setup]', controllers);
                 for (const ctrl of controllers) {
                     ctrl.setupEvents(socket);
                 }
