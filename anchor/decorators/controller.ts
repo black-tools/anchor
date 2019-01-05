@@ -66,8 +66,12 @@ export function Controller(config: ControllerConfig) {
 
 
             setupEvents(socket) {
+                console.log('[setup events]', this.__events__);
+
                 for (const event of (this.__events__ || [])) {
-                    const completeEventName = event.verb + ' ' + this.__config__.name;
+                    const completeEventName = event.method + ' ' + this.__config__.name;
+                    console.log('[event name]', event.method, completeEventName);
+
                     socket.on(completeEventName, async ([rid, params, data]) => {
                         try {
                             const result = this[event.propKey](params, data);

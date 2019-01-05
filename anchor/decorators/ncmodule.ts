@@ -57,6 +57,7 @@ export function NcModule(config: NcModuleConfig) {
 
             setupEvents(socket){
                 const controllers = this.__controllers__;
+                console.log('[setup]', controllers);
                 for (const ctrl of controllers) {
                     ctrl.setupEvents(socket);
                 }
