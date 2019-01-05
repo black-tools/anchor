@@ -76,7 +76,7 @@ export function Controller(config: ControllerConfig) {
                         try {
                             const result = this[event.propKey](params, data);
                             if (result.then) {
-                                socket.emit('R', [rid, 200, result]);
+                                socket.emit('R', [rid, 200, await result]);
                             } else {
                                 socket.emit('R', [rid, 200, result]);
                             }
