@@ -1,6 +1,6 @@
 {
   "name": "@black-tools/anchor",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A small framework for builiding neat web servers",
   "main": "dist",
   "types": "dist",
