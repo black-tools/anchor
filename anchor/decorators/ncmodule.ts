@@ -50,7 +50,7 @@ export function NcModule(config: NcModuleConfig) {
             setupMiddlewares() {
                 const middlewares = this.__config__.middlewares || [];
                 for (const mw of middlewares) {
-                    this.__router__.use(mw)
+                    this.__router__.use(mw);
                 }
             }
 
@@ -58,6 +58,11 @@ export function NcModule(config: NcModuleConfig) {
             setupEvents(socket){
                 const controllers = this.__controllers__;
                 console.log('[setup]', controllers);
+
+                for (let module of this.__imports__) {
+                    module.setupEvents(socket);
+                }
+
                 for (const ctrl of controllers) {
                     ctrl.setupEvents(socket);
                 }
