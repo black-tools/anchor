@@ -1,7 +1,6 @@
 import * as express from "express";
 import * as http from 'http';
-
-// import * as urljoin from 'urljoin';
+import * as sio from 'socket.io';
 
 export interface AppOptions {
     port?: number;
@@ -14,7 +13,16 @@ export class App {
         const app = express();
         const server = http.createServer(app);
 
+        const io = sio(server);
+        app.set('sio', io);
+
         let m = new module(app, server);
+
+
+        io.on('connection', (socket) => {
+            m.setupEvents(socket);
+        });
+
         app.use(m.__router__);
 
 

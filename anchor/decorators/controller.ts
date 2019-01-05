@@ -1,10 +1,10 @@
 import * as express from "express";
 import * as urljoin from 'url-join';
-import * as path from "path";
 
 export interface ControllerConfig {
-    path: string;
+    path?: string;
     bindAfter?: boolean;
+    name?: string;
 }
 
 export function Controller(config: ControllerConfig) {
@@ -15,7 +15,6 @@ export function Controller(config: ControllerConfig) {
                 super(...args);
                 this.__config__ = config;
             }
-
 
             setupRoutes(router) {
                 for (const route of (this.__routes__ || [])) {
@@ -62,6 +61,26 @@ export function Controller(config: ControllerConfig) {
                                 break;
                         }
                     })
+                }
+            }
+
+
+            setupEvents(socket) {
+                for (const event of (this.__events__ || [])) {
+                    const completeEventName = event.verb + ' ' + this.__config__.name;
+                    socket.on(completeEventName, async ([rid, params, data]) => {
+                        try {
+                            const result = this[event.propKey](params, data);
+                            if (result.then) {
+                                socket.emit('R', [rid, 200, result]);
+                            } else {
+                                socket.emit('R', [rid, 200, result]);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            socket.emit('R', [rid, 500, err])
+                        }
+                    });
                 }
             }
 
